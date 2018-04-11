@@ -53,11 +53,11 @@ KUBEADM_OPTIONS=""
 case $K8S_VERSION in
     "1.7")
         KUBERNETES_CNI_VERSION="0.5.1-00"
-        K8S_FULL_VERSION="1.7.15"
+        K8S_FULL_VERSION="1.7.16"
         ;;
     "1.8")
         KUBERNETES_CNI_VERSION="0.5.1-00"
-        K8S_FULL_VERSION="1.8.10"
+        K8S_FULL_VERSION="1.8.11"
         ;;
     "1.9")
         KUBERNETES_CNI_VERSION="0.6.0-00"
@@ -67,7 +67,7 @@ case $K8S_VERSION in
 
     "1.10")
         KUBERNETES_CNI_VERSION="0.6.0-00"
-        K8S_FULL_VERSION="1.10.0"
+        K8S_FULL_VERSION="1.10.1"
         KUBEADM_SLAVE_OPTIONS="--discovery-token-unsafe-skip-ca-verification"
         ;;
 
