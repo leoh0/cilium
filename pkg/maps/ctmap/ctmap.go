@@ -25,8 +25,6 @@ import (
 	"github.com/cilium/cilium/pkg/byteorder"
 	"github.com/cilium/cilium/pkg/flowdebug"
 	"github.com/cilium/cilium/pkg/logging"
-	"github.com/cilium/cilium/pkg/policy"
-
 	"github.com/sirupsen/logrus"
 )
 
@@ -119,8 +117,6 @@ type GCFilterType uint
 // EndpointIP to be not nil.
 type GCFilter struct {
 	Type       GCFilterType
-	IDsToMod   policy.SecurityIDContexts
-	IDsToKeep  policy.SecurityIDContexts
 	Time       uint32
 	EndpointID uint16
 	EndpointIP net.IP
@@ -129,9 +125,7 @@ type GCFilter struct {
 // NewGCFilterBy creates a new GCFilter of the given type.
 func NewGCFilterBy(filterType GCFilterType) *GCFilter {
 	return &GCFilter{
-		Type:      filterType,
-		IDsToMod:  policy.NewSecurityIDContexts(),
-		IDsToKeep: policy.NewSecurityIDContexts(),
+		Type: filterType,
 	}
 }
 
