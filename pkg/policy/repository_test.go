@@ -384,24 +384,6 @@ func (ds *PolicyTestSuite) TestWildcardL3RulesIngress(c *C) {
 	c.Assert(err, IsNil)
 
 	expectedPolicy := L4PolicyMap{
-		"0/TCP": {
-			Port:             0,
-			Protocol:         api.ProtoTCP,
-			U8Proto:          0x6,
-			Endpoints:        []api.EndpointSelector{selBar1},
-			Ingress:          true,
-			L7RulesPerEp:     L7DataMap{},
-			DerivedFromRules: labels.LabelArrayList{labelsL3},
-		},
-		"0/UDP": {
-			Port:             0,
-			Protocol:         api.ProtoUDP,
-			U8Proto:          0x11,
-			Endpoints:        []api.EndpointSelector{selBar1},
-			Ingress:          true,
-			L7RulesPerEp:     L7DataMap{},
-			DerivedFromRules: labels.LabelArrayList{labelsL3},
-		},
 		"9092/TCP": {
 			Port:      9092,
 			Protocol:  api.ProtoTCP,
@@ -521,24 +503,6 @@ func (ds *PolicyTestSuite) TestWildcardL3RulesEgress(c *C) {
 	c.Assert(err, IsNil)
 
 	expectedPolicy := L4PolicyMap{
-		"0/TCP": {
-			Port:             0,
-			Protocol:         api.ProtoTCP,
-			U8Proto:          0x6,
-			Endpoints:        []api.EndpointSelector{selBar1},
-			Ingress:          false,
-			L7RulesPerEp:     L7DataMap{},
-			DerivedFromRules: labels.LabelArrayList{labelsL3},
-		},
-		"0/UDP": {
-			Port:             0,
-			Protocol:         api.ProtoUDP,
-			U8Proto:          0x11,
-			Endpoints:        []api.EndpointSelector{selBar1},
-			Ingress:          false,
-			L7RulesPerEp:     L7DataMap{},
-			DerivedFromRules: labels.LabelArrayList{labelsL3},
-		},
 		"9092/TCP": {
 			Port:      9092,
 			Protocol:  api.ProtoTCP,
@@ -835,8 +799,7 @@ Label verdict: undecided
 
 Resolving ingress port policy for [any:bar]
 * Rule {"matchLabels":{"any:bar":""}}: selected
-    L3 Ingress rule
-    Labels [any:baz] not found
+    No L4 Ingress rules
 * Rule {"matchLabels":{"any:bar":""}}: selected
     Found all required labels
     Allows Ingress port [{80 ANY}] from endpoints [{"matchLabels":{"reserved:host":""}} {"matchLabels":{"any:baz":""}}]
@@ -865,8 +828,7 @@ Label verdict: undecided
 
 Resolving ingress port policy for [any:bar]
 * Rule {"matchLabels":{"any:bar":""}}: selected
-    L3 Ingress rule
-    Labels [any:bar] not found
+    No L4 Ingress rules
 * Rule {"matchLabels":{"any:bar":""}}: selected
     Labels [any:bar] not found
 2/2 rules selected
