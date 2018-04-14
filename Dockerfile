@@ -19,6 +19,30 @@ ARG LOCKDEBUG
 #
 RUN make LOCKDEBUG=$LOCKDEBUG PKG_BUILD=1 DESTDIR=/tmp/install clean-container build install
 
+FROM linuxkit/alpine:f3cd219615428b2bd943411723eb28875275fae7 AS cni-builder
+
+RUN apk add -U --no-cache \
+  bash \
+  coreutils \
+  curl \
+  findutils \
+  git \
+  go \
+  grep \
+  libc-dev \
+  linux-headers \
+  make \
+  rsync \
+  && true
+
+ENV GOPATH=/go PATH=$PATH:/go/bin
+
+WORKDIR /go/src/github.com/cilium/cilium
+ADD . ./
+
+WORKDIR /go/src/github.com/cilium/cilium/plugins/cilium-cni
+RUN make cilium-cni && mv cilium-cni /tmp/cilium-cni
+
 #
 # Cilium runtime install.
 #
@@ -32,6 +56,7 @@ RUN make LOCKDEBUG=$LOCKDEBUG PKG_BUILD=1 DESTDIR=/tmp/install clean-container b
 FROM quay.io/cilium/cilium-runtime:2018-04-10
 LABEL maintainer="maintainer@cilium.io"
 COPY --from=builder /tmp/install /
+COPY --from=cni-builder /tmp /tmp
 ADD plugins/cilium-cni/cni-install.sh /cni-install.sh
 ADD plugins/cilium-cni/cni-uninstall.sh /cni-uninstall.sh
 WORKDIR /root
