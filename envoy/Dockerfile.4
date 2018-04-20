@@ -1,0 +1,64 @@
+FROM frolvlad/alpine-glibc
+
+WORKDIR /go/src/github.com/cilium/cilium/envoy
+
+RUN apk add -U --no-cache \
+  bash \
+  coreutils \
+  curl \
+  findutils \
+  git \
+  go \
+  grep \
+  libc-dev \
+  linux-headers \
+  make \
+  rsync \
+  && true
+
+RUN \
+wget -q -O /etc/apk/keys/david@ostrovsky.org-5a0369d6.rsa.pub https://raw.githubusercontent.com/davido/bazel-alpine-package/master/david@ostrovsky.org-5a0369d6.rsa.pub && \
+wget https://github.com/davido/bazel-alpine-package/releases/download/0.11.1/bazel-0.11.1-r0.apk
+
+#RUN mv /etc/apk/repositories.upstream /etc/apk/repositories
+RUN apk add -U  --no-cache \
+  openjdk8 \
+  zip \
+  unzip \
+  bazel-0.11.1-r0.apk \
+  g++ \
+  cmake \
+  libtool \
+  perl \
+  libelf-dev \
+  pkgconf \
+  zlib-dev \
+  coreutils \
+  m4 \
+  automake \
+  autoconf \
+  python \
+  && true
+
+ENV GOROOT /usr/lib/go
+ENV GOPATH=/go
+ENV PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
+
+RUN \
+  go get -u github.com/cilium/go-bindata/... && \
+  go get -u github.com/golang/protobuf/protoc-gen-go && \
+  go get -d github.com/lyft/protoc-gen-validate && \
+  (cd /go/src/github.com/lyft/protoc-gen-validate ; git checkout 930a67cf7ba41b9d9436ad7a1be70a5d5ff6e1fc ; make build)
+
+ADD BAZEL_VERSION ./
+ADD Makefile.deps WORKSPACE tools bazel ./
+ADD BUILD_DEPS BUILD
+
+ENV PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/bin
+
+RUN grep "ENVOY_SHA[ \t]*=" WORKSPACE | cut -d \" -f 2 >SOURCE_VERSION
+
+RUN make PKG_BUILD=1 -f Makefile.deps || :
+
+RUN sed -i 's/"set -e"/"#!\/bin\/sh", "set -e"/g' /root/.cache/bazel/_bazel_root/e3bb2978717df7858b43846d8c1242eb/external/com_lyft_protoc_gen_validate/bazel/go_proto_library.bzl
+

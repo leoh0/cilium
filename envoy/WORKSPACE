@@ -7,11 +7,11 @@ workspace(name = "cilium")
 #
 # No other line in this file may have ENVOY_SHA followed by an equals sign!
 #
-ENVOY_SHA = "fc3693b5205518171a590d87e51ae317040f9276"
+ENVOY_SHA = "c8a455937870b9e4a9ea67bf159cd1fca1b074f8"
 
 http_archive(
     name = "envoy",
-    url = "https://github.com/envoyproxy/envoy/archive/" + ENVOY_SHA + ".zip",
+    url = "https://github.com/leoh0/envoy/archive/" + ENVOY_SHA + ".zip",
     strip_prefix = "envoy-" + ENVOY_SHA,
 )
 

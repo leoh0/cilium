@@ -18,7 +18,7 @@ else
 ENVOY_DEPS_BIN = ./bazel-bin/envoy_deps
 BAZEL ?= bazel
 BAZEL_OPTS ?= --batch
-BAZEL_BUILD_OPTS = --spawn_strategy=standalone --genrule_strategy=standalone
+BAZEL_BUILD_OPTS = --verbose_failures --spawn_strategy=standalone --genrule_strategy=standalone
 
 envoy-release-deps: force
 	$(BAZEL) $(BAZEL_OPTS) build $(BAZEL_BUILD_OPTS) -c opt //:envoy_deps
