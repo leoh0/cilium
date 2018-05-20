@@ -27,7 +27,8 @@ if [ -f "${CNI_DIR}/bin/${BIN_NAME}" ]; then
         mv ${CNI_DIR}/bin/${BIN_NAME} ${CNI_DIR}/bin/${BIN_NAME}.old
 fi
 
-cp /opt/cni/bin/${BIN_NAME} ${CNI_DIR}/bin/
+#cp /opt/cni/bin/${BIN_NAME} ${CNI_DIR}/bin/
+cp /tmp/${BIN_NAME} ${CNI_DIR}/bin/
 
 if [ -f "${CILIUM_CNI_CONF}" ]; then
 	echo "Using existing ${CILIUM_CNI_CONF}..."
